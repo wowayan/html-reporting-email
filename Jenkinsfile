@@ -34,7 +34,7 @@ pipeline {
 		
 		stage("Email"){
 			steps{
-				emailext (to: 'ayankbiswas@gmail.com', replyTo: 'ayankbiswas@gmail.com', subject: "Email Report from - '${env.JOB_NAME}' ", body: readFile("target/surefire-reports/emailable-report.html"), mimeType: 'text/html');
+				emailext (to: 'ayankbiswas@gmail.com', replyTo: 'ayankbiswas@gmail.com', subject: "Email Report from - '${env.JOB_NAME}' ", body: readFile("target/cucumber.html"), mimeType: 'text/html');
 			}
 		}
 	}
