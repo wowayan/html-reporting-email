@@ -11,26 +11,17 @@ pipeline {
 	
 	
 	stages{
-		stage("Checkout, Test & Publish") {
+		stage("Checkout, Verify") {
 			steps{
 				checkout scm
 				
 				script{
-					sh(/mvn clean test /)
+					sh(/mvn clean verify/)
 				}
 				
 				// step([$class : 'Publisher', reportFilenamePattern : '**/testng-results.xml'])
 			}
 		}
-		stage('Archive Cucumber Json Report') {
-                          archiveArtifacts artifacts: 'target/cucumber*', fingerprint: true, followSymlinks: false
-                      }
-                        stage('Generate Cucumber HTML reports') {
-                                cucumber buildStatus: 'UNSTABLE',
-                                fileIncludePattern: 'cucumber*.json',
-                                hideEmptyHooks: true,
-                                jsonReportDirectory: 'target'
-                            }
 		
 		stage("Email"){
 			steps{
