@@ -1,7 +1,7 @@
 pipeline {
 	agent {
 		node {
-			label 'master'
+			label 'main'
 		}
 	}
 	
@@ -9,18 +9,28 @@ pipeline {
 		timestamps()
 	}
 	
+	
 	stages{
 		stage("Checkout, Test & Publish") {
 			steps{
 				checkout scm
 				
 				script{
-					sh(/mvn clean  test /)
+					sh(/mvn clean test /)
 				}
 				
-				step([$class : 'Publisher', reportFilenamePattern : '**/testng-results.xml'])
+				// step([$class : 'Publisher', reportFilenamePattern : '**/testng-results.xml'])
 			}
 		}
+		stage('Archive Cucumber Json Report') {
+                          archiveArtifacts artifacts: 'target/cucumber*', fingerprint: true, followSymlinks: false
+                      }
+                        stage('Generate Cucumber HTML reports') {
+                                cucumber buildStatus: 'UNSTABLE',
+                                fileIncludePattern: 'cucumber*.json',
+                                hideEmptyHooks: true,
+                                jsonReportDirectory: 'target'
+                            }
 		
 		stage("Email"){
 			steps{
