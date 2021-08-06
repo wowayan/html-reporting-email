@@ -8,10 +8,6 @@ pipeline {
 	options{
 		timestamps()
 	}
-	stage('build'){
-        withMaven(maven: 'mvn') {
-            sh "mvn clean package"
-        }
 	
 	stages{
 		stage("Checkout, Test & Publish") {
